@@ -309,6 +309,11 @@ func (s *Scheme) IsUnversioned(obj Object) (bool, bool) {
 		return false, false
 	}
 	_, ok := s.unversionedTypes[t]
+	for k,v1 := range s.unversionedTypes{
+		fmt.Println(k)
+		fmt.Println(v1.Kind,v1.Version)
+	}
+
 	return ok, true
 }
 

@@ -66,7 +66,8 @@ func TestCodec(t *testing.T) {
 
 func TestUnversioned(t *testing.T) {
 	for _, obj := range []runtime.Object{
-		&metav1.Status{},
+		//&metav1.Status{},
+		&internal.Pod{},
 	} {
 		if unversioned, ok := legacyscheme.Scheme.IsUnversioned(obj); !unversioned || !ok {
 			t.Errorf("%v is expected to be unversioned", reflect.TypeOf(obj))

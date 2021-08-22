@@ -111,6 +111,7 @@ func (a *APIInstaller) Install() ([]metav1.APIResource, []*storageversion.Resour
 	}
 	sort.Strings(paths)
 	for _, path := range paths {
+		// 在这里进行最终的注册
 		apiResource, resourceInfo, err := a.registerResourceHandlers(path, a.group.Storage[path], ws)
 		if err != nil {
 			errors = append(errors, fmt.Errorf("error in registering resource: %s, %v", path, err))
@@ -188,6 +189,7 @@ func GetResourceKind(groupVersion schema.GroupVersion, storage rest.Storage, typ
 	return fqKindToRegister, nil
 }
 
+// 在ws里添加路由
 func (a *APIInstaller) registerResourceHandlers(path string, storage rest.Storage, ws *restful.WebService) (*metav1.APIResource, *storageversion.ResourceInfo, error) {
 	admit := a.group.Admit
 
@@ -815,6 +817,7 @@ func (a *APIInstaller) registerResourceHandlers(path string, storage rest.Storag
 		case "POST": // Create a resource.
 			var handler restful.RouteFunction
 			if isNamedCreater {
+				// 这里的hander后端指定etcd存储
 				handler = restfulCreateNamedResource(namedCreater, reqScope, admit)
 			} else {
 				handler = restfulCreateResource(creater, reqScope, admit)

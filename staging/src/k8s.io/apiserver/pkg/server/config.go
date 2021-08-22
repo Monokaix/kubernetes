@@ -514,6 +514,7 @@ func (c *Config) Complete(informers informers.SharedInformerFactory) CompletedCo
 		} else {
 			c.EquivalentResourceRegistry = runtime.NewEquivalentResourceRegistryWithIdentity(func(groupResource schema.GroupResource) string {
 				// use the storage prefix as the key if possible
+				// 指定的是后端etcd
 				if opts, err := c.RESTOptionsGetter.GetRESTOptions(groupResource); err == nil {
 					return opts.ResourcePrefix
 				}
@@ -549,6 +550,7 @@ func (c completedConfig) New(name string, delegationTarget DelegationTarget) (*G
 	handlerChainBuilder := func(handler http.Handler) http.Handler {
 		return c.BuildHandlerChainFunc(handler, c.Config)
 	}
+	// 返回最终创建的api server，结合三个apiserevr
 	apiServerHandler := NewAPIServerHandler(name, c.Serializer, handlerChainBuilder, delegationTarget.UnprotectedHandler())
 
 	s := &GenericAPIServer{

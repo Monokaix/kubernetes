@@ -146,6 +146,7 @@ func createHandler(r rest.NamedCreater, scope *RequestScope, admit admission.Int
 
 		trace.Step("About to store object in database")
 		admissionAttributes := admission.NewAttributesRecord(obj, nil, scope.Kind, namespace, name, scope.Resource, scope.Subresource, admission.Create, options, dryrun.IsDryRun(options.DryRun), userInfo)
+		// 处理创建请求Create的handler最终是调用rest.Storage完成资源创建的，创建的数据存储在etcd
 		requestFunc := func() (runtime.Object, error) {
 			return r.Create(
 				ctx,

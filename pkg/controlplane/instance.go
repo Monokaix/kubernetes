@@ -270,6 +270,8 @@ func (c *Config) createLeaseReconciler() reconcilers.EndpointReconciler {
 	if err != nil {
 		klog.Fatalf("Error determining service IP ranges: %v", err)
 	}
+
+	// 这里指定etcd存储后端
 	leaseStorage, _, err := storagefactory.Create(*config, nil)
 	if err != nil {
 		klog.Fatalf("Error creating storage factory: %v", err)
@@ -412,6 +414,7 @@ func (c completedConfig) New(delegationTarget genericapiserver.DelegationTarget)
 			ServiceAccountMaxExpiration: c.ExtraConfig.ServiceAccountMaxExpiration,
 			APIAudiences:                c.GenericConfig.Authentication.APIAudiences,
 		}
+		// 注册/api开头的前缀资源的，绑定路由与handler
 		if err := m.InstallLegacyAPI(&c, c.GenericConfig.RESTOptionsGetter, legacyRESTStorageProvider); err != nil {
 			return nil, err
 		}
@@ -539,6 +542,7 @@ func labelAPIServerHeartbeat(lease *coordinationapiv1.Lease) error {
 
 // InstallLegacyAPI will install the legacy APIs for the restStorageProviders if they are enabled.
 func (m *Instance) InstallLegacyAPI(c *completedConfig, restOptionsGetter generic.RESTOptionsGetter, legacyRESTStorageProvider corerest.LegacyRESTStorageProvider) error {
+	// 先创建storage，这个legacyRESTStorage很重要
 	legacyRESTStorage, apiGroupInfo, err := legacyRESTStorageProvider.NewLegacyRESTStorage(restOptionsGetter)
 	if err != nil {
 		return fmt.Errorf("error building core storage: %v", err)

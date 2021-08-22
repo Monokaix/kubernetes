@@ -67,6 +67,7 @@ func newNamespaces(c *CoreV1Client) *namespaces {
 }
 
 // Get takes name of the namespace, and returns the corresponding namespace object, and an error if there is any.
+// 封装了对namespace的http请求
 func (c *namespaces) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.Namespace, err error) {
 	result = &v1.Namespace{}
 	err = c.client.Get().

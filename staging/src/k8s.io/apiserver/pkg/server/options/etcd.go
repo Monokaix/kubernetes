@@ -249,6 +249,8 @@ type SimpleRestOptionsFactory struct {
 func (f *SimpleRestOptionsFactory) GetRESTOptions(resource schema.GroupResource) (generic.RESTOptions, error) {
 	ret := generic.RESTOptions{
 		StorageConfig:           &f.Options.StorageConfig,
+		// 这里与etcd交互，通过Decorator指定后端为etcdv3
+		// 外部的generic config被的restoption被设置为etcd
 		Decorator:               generic.UndecoratedStorage,
 		EnableGarbageCollection: f.Options.EnableGarbageCollection,
 		DeleteCollectionWorkers: f.Options.DeleteCollectionWorkers,

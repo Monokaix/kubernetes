@@ -74,6 +74,7 @@ func NewStorageFactoryConfig() *StorageFactoryConfig {
 }
 
 // StorageFactoryConfig is a configuration for creating storage factory.
+// 专门配置存储相关的配置
 type StorageFactoryConfig struct {
 	StorageConfig                    storagebackend.Config
 	APIResourceConfig                *serverstorage.ResourceConfig

@@ -325,6 +325,7 @@ func (s *GenericAPIServer) PrepareRun() preparedGenericAPIServer {
 
 // Run spawns the secure http server. It only returns if stopCh is closed
 // or the secure port cannot be listened on initially.
+// 最后在这里run整个apiserver，run的是generic server
 func (s preparedGenericAPIServer) Run(stopCh <-chan struct{}) error {
 	delayedStopCh := make(chan struct{})
 
@@ -418,6 +419,8 @@ func (s preparedGenericAPIServer) NonBlockingRun(stopCh <-chan struct{}) (<-chan
 }
 
 // installAPIResources is a private method for installing the REST storage backing each api groupversionresource
+// 有两个地方调用安装api，一个是legacy api，前缀为/api，也就是核心api
+// 另一个调用地方的extension api，前缀为/apis/apiextensions.k8s.io/$version 也就是ws里的root路径
 func (s *GenericAPIServer) installAPIResources(apiPrefix string, apiGroupInfo *APIGroupInfo, openAPIModels openapiproto.Models) error {
 	var resourceInfos []*storageversion.ResourceInfo
 	for _, groupVersion := range apiGroupInfo.PrioritizedVersions {
