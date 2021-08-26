@@ -131,6 +131,7 @@ func SplitMetaNamespaceKey(key string) (namespace, name string, err error) {
 
 // `*cache` implements Indexer in terms of a ThreadSafeStore and an
 // associated KeyFunc.
+// 真正存储资源的本地缓存 ThreadSafeStore
 type cache struct {
 	// cacheStorage bears the burden of thread safety for the cache
 	cacheStorage ThreadSafeStore
