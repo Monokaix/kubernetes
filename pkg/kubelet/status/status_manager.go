@@ -60,13 +60,16 @@ type podStatusSyncRequest struct {
 // All methods are thread-safe.
 type manager struct {
 	kubeClient clientset.Interface
+	// 具体实现是basicManager，管理pod id、name等到pod的映射
 	podManager kubepod.Manager
 	// Map from pod UID to sync status of the corresponding pod.
+	// pod id到pod status的映射
 	podStatuses      map[types.UID]versionedPodStatus
 	podStatusesLock  sync.RWMutex
 	podStatusChannel chan podStatusSyncRequest
 	// Map from (mirror) pod UID to latest status version successfully sent to the API server.
 	// apiStatusVersions must only be accessed from the sync thread.
+	// 镜像pod的最新版本
 	apiStatusVersions map[kubetypes.MirrorPodUID]uint64
 	podDeletionSafety PodDeletionSafetyProvider
 }
@@ -161,6 +164,7 @@ func (m *manager) Start() {
 	go wait.Forever(func() {
 		for {
 			select {
+			// 容器更新后的状态放入podStatusChannel，从这个channel取pod进行状态同步
 			case syncRequest := <-m.podStatusChannel:
 				klog.V(5).InfoS("Status Manager: syncing pod with status from podStatusChannel",
 					"podUID", syncRequest.podUID,
@@ -447,6 +451,7 @@ func (m *manager) updateStatusInternal(pod *v1.Pod, status v1.PodStatus, forceUp
 	m.podStatuses[pod.UID] = newStatus
 
 	select {
+	// 将更新后的状态存入channel，Start()函数会进行处理
 	case m.podStatusChannel <- podStatusSyncRequest{pod.UID, newStatus}:
 		klog.V(5).InfoS("Status Manager: adding pod with new status to podStatusChannel",
 			"pod", klog.KObj(pod),

@@ -586,12 +586,15 @@ func NewMainKubelet(kubeCfg *kubeletconfiginternal.KubeletConfiguration,
 	klet.livenessManager = proberesults.NewManager()
 	klet.readinessManager = proberesults.NewManager()
 	klet.startupManager = proberesults.NewManager()
+	// 实现: pkg/kubelet/container/cache.go pleg用的也是这个cache
 	klet.podCache = kubecontainer.NewCache()
 
 	// podManager is also responsible for keeping secretManager and configMapManager contents up-to-date.
 	mirrorPodClient := kubepod.NewBasicMirrorClient(klet.kubeClient, string(nodeName), nodeLister)
+	// 管理pod，实现是basicManager，然后被传递到下面的manager里面
 	klet.podManager = kubepod.NewBasicPodManager(mirrorPodClient, secretManager, configMapManager)
 
+	// 实现: pkg/kubelet/status/status_manager.go的manager
 	klet.statusManager = status.NewManager(klet.kubeClient, klet.podManager, klet)
 
 	klet.resourceAnalyzer = serverstats.NewResourceAnalyzer(klet, kubeCfg.VolumeStatsAggPeriod.Duration, kubeDeps.Recorder)
