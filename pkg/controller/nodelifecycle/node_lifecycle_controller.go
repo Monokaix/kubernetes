@@ -486,6 +486,7 @@ func NewNodeLifecycleController(
 		nodeLister := nodeInformer.Lister()
 		nodeGetter := func(name string) (*v1.Node, error) { return nodeLister.Get(name) }
 		nc.taintManager = scheduler.NewNoExecuteTaintManager(kubeClient, podGetter, nodeGetter, nc.getPodsAssignedToNode)
+		// 从这里接收node变化，放到nodeUpdateQueue，再由NoExecuteTaintManager进行处理
 		nodeInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 			AddFunc: nodeutil.CreateAddNodeHandler(func(node *v1.Node) error {
 				nc.taintManager.NodeUpdated(nil, node)

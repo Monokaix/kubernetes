@@ -348,6 +348,7 @@ func (tc *NoExecuteTaintManager) processPodOnNode(
 		tc.cancelWorkWithEvent(podNamespacedName)
 	}
 	allTolerated, usedTolerations := v1helper.GetMatchingTolerations(taints, tolerations)
+	// 不能容忍污点就直接驱逐
 	if !allTolerated {
 		klog.V(2).InfoS("Not all taints are tolerated after update for pod on node", "pod", podNamespacedName.String(), "node", nodeName)
 		// We're canceling scheduled work (if any), as we're going to delete the Pod right away.
