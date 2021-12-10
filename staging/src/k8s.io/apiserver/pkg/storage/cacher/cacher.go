@@ -1183,6 +1183,7 @@ func (c *errWatcher) Stop() {
 
 // cacheWatcher implements watch.Interface
 // this is not thread-safe
+// 这里是缓存层的watch，实现watch.Interface
 type cacheWatcher struct {
 	input     chan *watchCacheEvent
 	result    chan watch.Event

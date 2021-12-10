@@ -77,6 +77,7 @@ type watcher struct {
 }
 
 // watchChan implements watch.Interface.
+// 这里是底层etcd的watch 实现了watch.Interface接口
 type watchChan struct {
 	watcher           *watcher
 	key               string
