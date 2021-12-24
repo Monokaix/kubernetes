@@ -28,9 +28,8 @@ import (
 	"k8s.io/client-go/util/keyutil"
 	"k8s.io/klog/v2"
 	kubeadmapi "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm"
-	pkiutil "k8s.io/kubernetes/cmd/kubeadm/app/util/pkiutil"
-
 	kubeadmconstants "k8s.io/kubernetes/cmd/kubeadm/app/constants"
+	"k8s.io/kubernetes/cmd/kubeadm/app/util/pkiutil"
 )
 
 var (
@@ -345,6 +344,7 @@ func UsingExternalCA(cfg *kubeadmapi.ClusterConfiguration) (bool, error) {
 		return false, nil
 	}
 
+	// 验证是不是apisever等证书是不是由ca签发
 	if err := validateSignedCert(certKeyLocation{cfg.CertificatesDir, kubeadmconstants.CACertAndKeyBaseName, kubeadmconstants.APIServerCertAndKeyBaseName, "API server"}); err != nil {
 		return true, err
 	}

@@ -94,6 +94,7 @@ func SetBootstrapTokensDynamicDefaults(cfg *[]kubeadmapi.BootstrapToken) error {
 }
 
 // SetNodeRegistrationDynamicDefaults checks and sets configuration values for the NodeRegistration object
+// 设置主机name和taints
 func SetNodeRegistrationDynamicDefaults(cfg *kubeadmapi.NodeRegistrationOptions, controlPlaneTaint bool) error {
 	var err error
 	cfg.Name, err = kubeadmutil.GetHostname(cfg.Name)

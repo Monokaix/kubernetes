@@ -35,6 +35,8 @@ func CreateNewTokens(client clientset.Interface, tokens []kubeadmapi.BootstrapTo
 }
 
 // UpdateOrCreateTokens attempts to update a token with the given ID, or create if it does not already exist.
+
+// 创建和token关联的secret
 func UpdateOrCreateTokens(client clientset.Interface, failIfExists bool, tokens []kubeadmapi.BootstrapToken) error {
 
 	for _, token := range tokens {

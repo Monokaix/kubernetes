@@ -34,6 +34,7 @@ var labelsToAdd = []string{
 }
 
 // MarkControlPlane taints the control-plane and sets the control-plane label
+// 为控制节点设置label和taints
 func MarkControlPlane(client clientset.Interface, controlPlaneName string, taints []v1.Taint) error {
 	// TODO: remove this "deprecated" amend and pass "labelsToAdd" directly:
 	// https://github.com/kubernetes/kubeadm/issues/2200

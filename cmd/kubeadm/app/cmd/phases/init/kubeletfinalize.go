@@ -66,6 +66,7 @@ func NewKubeletFinalizePhase() workflow.Phase {
 // runKubeletFinalizeCertRotation detects if the kubelet certificate rotation is enabled
 // and updates the kubelet.conf file to point to a rotatable certificate and key for the
 // Node user.
+// 将kubelet-client-current.pem证书写入kubelet.conf文件中
 func runKubeletFinalizeCertRotation(c workflow.RunData) error {
 	data, ok := c.(InitData)
 	if !ok {

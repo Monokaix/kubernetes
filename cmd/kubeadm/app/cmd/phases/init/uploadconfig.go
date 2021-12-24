@@ -72,18 +72,20 @@ func NewUploadConfigPhase() workflow.Phase {
 				InheritFlags:   getUploadConfigPhaseFlags(),
 			},
 			{
-				Name:         "kubeadm",
-				Short:        "Upload the kubeadm ClusterConfiguration to a ConfigMap",
-				Long:         uploadKubeadmConfigLongDesc,
-				Example:      uploadKubeadmConfigExample,
+				Name:    "kubeadm",
+				Short:   "Upload the kubeadm ClusterConfiguration to a ConfigMap",
+				Long:    uploadKubeadmConfigLongDesc,
+				Example: uploadKubeadmConfigExample,
+				// 创建包含InitConfig的cm，并设置rbac权限
 				Run:          runUploadKubeadmConfig,
 				InheritFlags: getUploadConfigPhaseFlags(),
 			},
 			{
-				Name:         "kubelet",
-				Short:        "Upload the kubelet component config to a ConfigMap",
-				Long:         uploadKubeletConfigLongDesc,
-				Example:      uploadKubeletConfigExample,
+				Name:    "kubelet",
+				Short:   "Upload the kubelet component config to a ConfigMap",
+				Long:    uploadKubeletConfigLongDesc,
+				Example: uploadKubeletConfigExample,
+				// 创建包含ClusterConfig的cm，并设置rbac权限
 				Run:          runUploadKubeletConfig,
 				InheritFlags: getUploadConfigPhaseFlags(),
 			},

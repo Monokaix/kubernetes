@@ -37,7 +37,7 @@ import (
 	certsphase "k8s.io/kubernetes/cmd/kubeadm/app/phases/certs"
 	kubeadmutil "k8s.io/kubernetes/cmd/kubeadm/app/util"
 	kubeconfigutil "k8s.io/kubernetes/cmd/kubeadm/app/util/kubeconfig"
-	pkiutil "k8s.io/kubernetes/cmd/kubeadm/app/util/pkiutil"
+	"k8s.io/kubernetes/cmd/kubeadm/app/util/pkiutil"
 )
 
 const (
@@ -173,6 +173,7 @@ func buildKubeConfigFromSpec(spec *kubeConfigSpec, clustername string) (*clientc
 	// otherwise, create a client certs
 	clientCertConfig := newClientCertConfigFromKubeConfigSpec(spec)
 
+	// 根据ca.crt和ca.key重新生成admin.conf/controller.conf等文件里面包含的证书
 	clientCert, clientKey, err := pkiutil.NewCertAndKey(spec.CACert, spec.ClientCertAuth.CAKey, &clientCertConfig)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failure while creating %s client certificate", spec.ClientName)
@@ -196,7 +197,9 @@ func buildKubeConfigFromSpec(spec *kubeConfigSpec, clustername string) (*clientc
 func newClientCertConfigFromKubeConfigSpec(spec *kubeConfigSpec) pkiutil.CertConfig {
 	return pkiutil.CertConfig{
 		Config: certutil.Config{
-			CommonName:   spec.ClientName,
+			// 这里指定的是User信息，也就是controller和scheduler里面包含的用户信息system:kube-controller-manager/system:kube-scheduler
+			CommonName: spec.ClientName,
+			// 这里存储了客户端访问apiserver的认证信息，是group组信息，也就是cluster-admin里指定的system:master组等信息
 			Organization: spec.ClientCertAuth.Organizations,
 			Usages:       []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
 		},
@@ -204,6 +207,7 @@ func newClientCertConfigFromKubeConfigSpec(spec *kubeConfigSpec) pkiutil.CertCon
 }
 
 // validateKubeConfig check if the kubeconfig file exist and has the expected CA and server URL
+// 使用external CA时会校验一次，生成新的时也会校验一次
 func validateKubeConfig(outDir, filename string, config *clientcmdapi.Config) error {
 	kubeConfigFilePath := filepath.Join(outDir, filename)
 

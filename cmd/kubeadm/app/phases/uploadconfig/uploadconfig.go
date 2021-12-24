@@ -63,6 +63,7 @@ func ResetClusterStatusForNode(nodeName string, client clientset.Interface) erro
 }
 
 // UploadConfiguration saves the InitConfiguration used for later reference (when upgrading for instance)
+// 创建kubeadm-config cm/kubeadm:nodes-kubeadm-config role,绑定了system:bootstrappers:kubeadm:default-node-token和system:nodes group
 func UploadConfiguration(cfg *kubeadmapi.InitConfiguration, client clientset.Interface) error {
 	fmt.Printf("[upload-config] Storing the configuration used in ConfigMap %q in the %q Namespace\n", kubeadmconstants.KubeadmConfigConfigMap, metav1.NamespaceSystem)
 
