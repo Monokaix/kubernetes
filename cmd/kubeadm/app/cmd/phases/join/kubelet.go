@@ -174,6 +174,7 @@ func runKubeletStartJoinPhase(c workflow.RunData) (returnErr error) {
 	}
 
 	// Write the configuration for the kubelet (using the bootstrap token credentials) to disk so the kubelet can start
+	// 写入kubelet config配置到/var/lib/kubelet
 	if err := kubeletphase.WriteConfigToDisk(&initCfg.ClusterConfiguration, data.KubeletDir()); err != nil {
 		return err
 	}
@@ -210,6 +211,7 @@ func runKubeletStartJoinPhase(c workflow.RunData) (returnErr error) {
 	}
 
 	// When we know the /etc/kubernetes/kubelet.conf file is available, get the client
+	// 得到最终的kubelet.conf文件
 	client, err := kubeconfigutil.ClientSetFromFile(kubeadmconstants.GetKubeletKubeConfigPath())
 	if err != nil {
 		return err

@@ -105,6 +105,7 @@ func runBootstrapToken(c workflow.RunData) error {
 	}
 
 	// Create the cluster-info ConfigMap with the associated RBAC rules
+	// 创建cluster-info cm，此时Data部分只包含kubeconfig信息
 	if err := clusterinfophase.CreateBootstrapConfigMapIfNotExists(client, data.KubeConfigPath()); err != nil {
 		return errors.Wrap(err, "error creating bootstrap ConfigMap")
 	}

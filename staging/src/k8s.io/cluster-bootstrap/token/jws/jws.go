@@ -74,6 +74,8 @@ func stripContent(fullSig string) (string, error) {
 
 // DetachedTokenIsValid checks whether a given detached JWS-encoded token matches JWS output of the given content and token
 func DetachedTokenIsValid(detachedToken, content, tokenID, tokenSecret string) bool {
+	// 重新用token id和secret对content(也就是kubeconfig信息)进行一次jws签名，验证是否和从cluster-info取得的一致
+	// 一致说明cluster-info信息没有被篡改，即kubeadm信任apiserver
 	newToken, err := ComputeDetachedSignature(content, tokenID, tokenSecret)
 	if err != nil {
 		return false

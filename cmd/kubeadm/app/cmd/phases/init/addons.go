@@ -41,6 +41,7 @@ var (
 )
 
 // NewAddonPhase returns the addon Cobra command
+// 创建coredns和kube-proxy
 func NewAddonPhase() workflow.Phase {
 	return workflow.Phase{
 		Name:  "addon",

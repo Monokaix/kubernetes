@@ -156,6 +156,7 @@ func LoadClientCert(ctx context.Context, kubeconfigPath, bootstrapPath, certDir 
 		}
 	}
 
+	// 等待apiserver运行起来
 	if err := waitForServer(ctx, *bootstrapClientConfig, 1*time.Minute); err != nil {
 		klog.InfoS("Error waiting for apiserver to come up", "err", err)
 	}
@@ -312,6 +313,7 @@ func waitForServer(ctx context.Context, cfg restclient.Config, deadline time.Dur
 // certificate (pem-encoded). If there is any errors, or the watch timeouts, it
 // will return an error. This is intended for use on nodes (kubelet and
 // kubeadm).
+// 向apiserver申请证书 CSR请求
 func requestNodeCertificate(ctx context.Context, client clientset.Interface, privateKeyData []byte, nodeName types.NodeName) (certData []byte, err error) {
 	subject := &pkix.Name{
 		Organization: []string{"system:nodes"},
@@ -353,6 +355,7 @@ func requestNodeCertificate(ctx context.Context, client clientset.Interface, pri
 	defer cancel()
 
 	klog.V(2).InfoS("Waiting for client certificate to be issued")
+	// 等待CSR签发成功
 	return csr.WaitForCertificate(ctx, client, reqName, reqUID)
 }
 

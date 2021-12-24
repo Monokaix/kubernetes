@@ -215,6 +215,7 @@ func (e *Signer) signConfigMap(ctx context.Context) {
 	}
 
 	// Now recompute signatures and store them on the new map
+	// 从关联了tokenID的secret中拿到对应的token id，然后更新cluster-info中的jws-kubeconfig-tokenID的值，也就是进行jws签名
 	tokens := e.getTokens()
 	for tokenID, tokenValue := range tokens {
 		sig, err := jws.ComputeDetachedSignature(content, tokenID, tokenValue)

@@ -107,6 +107,7 @@ func retrieveValidatedConfigInfo(client clientset.Interface, cfg *kubeadmapi.Dis
 	}
 
 	// Load and validate the cluster CA from the insecure kubeconfig
+	// 根据传入的参数--discovery-token-ca-cert-hash对证书ca进行hash校验，确保没有ca没有被篡改
 	clusterCABytes, err := validateClusterCA(insecureConfig, pubKeyPins)
 	if err != nil {
 		return nil, err

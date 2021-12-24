@@ -34,7 +34,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	clientset "k8s.io/client-go/kubernetes"
 	certutil "k8s.io/client-go/util/cert"
-	keyutil "k8s.io/client-go/util/keyutil"
+	"k8s.io/client-go/util/keyutil"
 	bootstraputil "k8s.io/cluster-bootstrap/token/util"
 	"k8s.io/klog/v2"
 
@@ -107,6 +107,7 @@ func UploadCerts(client clientset.Interface, cfg *kubeadmapi.InitConfiguration, 
 		return err
 	}
 
+	// 创建包含加密cert的名为kubeadm-cert的secret
 	err = apiclient.CreateOrUpdateSecret(client, &v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:            kubeadmconstants.KubeadmCertsSecret,

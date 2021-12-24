@@ -35,6 +35,7 @@ func CreateNewTokens(client clientset.Interface, tokens []bootstraptokenv1.Boots
 }
 
 // UpdateOrCreateTokens attempts to update a token with the given ID, or create if it does not already exist.
+// 创建和token关联的secret
 func UpdateOrCreateTokens(client clientset.Interface, failIfExists bool, tokens []bootstraptokenv1.BootstrapToken) error {
 
 	for _, token := range tokens {

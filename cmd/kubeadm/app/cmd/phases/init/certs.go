@@ -214,6 +214,7 @@ func runCerts(c workflow.RunData) error {
 	return nil
 }
 
+// 创建根CA
 func runCAPhase(ca *certsphase.KubeadmCert) func(c workflow.RunData) error {
 	return func(c workflow.RunData) error {
 		data, ok := c.(InitData)
@@ -248,6 +249,7 @@ func runCAPhase(ca *certsphase.KubeadmCert) func(c workflow.RunData) error {
 	}
 }
 
+// 创建key和cert
 func runCertPhase(cert *certsphase.KubeadmCert, caCert *certsphase.KubeadmCert) func(c workflow.RunData) error {
 	return func(c workflow.RunData) error {
 		data, ok := c.(InitData)

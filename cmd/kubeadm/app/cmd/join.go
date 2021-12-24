@@ -528,6 +528,7 @@ func (j *joinData) TLSBootstrapCfg() (*clientcmdapi.Config, error) {
 		return j.tlsBootstrapCfg, nil
 	}
 	klog.V(1).Infoln("[preflight] Discovering cluster-info")
+	// 到这里，tlsBootstrapCfg已经包含了context字段下的user以及AuthInfo(users)中key为user(tls-bootstrap-token-user)对应的token
 	tlsBootstrapCfg, err := discovery.For(j.cfg)
 	j.tlsBootstrapCfg = tlsBootstrapCfg
 	return tlsBootstrapCfg, err
