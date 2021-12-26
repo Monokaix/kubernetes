@@ -916,6 +916,7 @@ func buildKubeletClientConfig(ctx context.Context, s *options.KubeletServer, nod
 		}
 
 		klog.V(2).InfoS("Starting client certificate rotation")
+		klog.Info("manager start...", clientCertificateManager.Current())
 		clientCertificateManager.Start()
 
 		return transportConfig, closeAllConns, nil
