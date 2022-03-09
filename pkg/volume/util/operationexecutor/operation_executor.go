@@ -672,6 +672,8 @@ func (oe *operationExecutor) IsOperationSafeToRetry(
 	return oe.pendingOperations.IsOperationSafeToRetry(volumeName, podName, nodeName, operationName)
 }
 
+// 调用方是ad controller或者kubelet volumeManager中的reconciler
+// 当kubelet volumeManager发现ad controller可以创建时kubelet不再重复操作
 func (oe *operationExecutor) AttachVolume(
 	volumeToAttach VolumeToAttach,
 	actualStateOfWorld ActualStateOfWorldAttacherUpdater) error {
@@ -811,6 +813,7 @@ func (oe *operationExecutor) VerifyVolumesAreAttachedPerNode(
 	return oe.pendingOperations.Run("" /* volumeName */, "" /* podName */, "" /* nodeName */, generatedOperations)
 }
 
+// 调用方：kubelet的reconciler循环
 func (oe *operationExecutor) MountVolume(
 	waitForAttachTimeout time.Duration,
 	volumeToMount VolumeToMount,

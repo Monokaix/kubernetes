@@ -64,6 +64,7 @@ var _ volume.Detacher = &csiAttacher{}
 
 var _ volume.DeviceMounter = &csiAttacher{}
 
+// 创建volumentAttatchMent对象并等待其status中attched字段变为true, 使用lister和poll轮询attached状态
 func (c *csiAttacher) Attach(spec *volume.Spec, nodeName types.NodeName) (string, error) {
 	if spec == nil {
 		klog.Error(log("attacher.Attach missing volume.Spec"))
@@ -137,6 +138,7 @@ func (c *csiAttacher) Attach(spec *volume.Spec, nodeName types.NodeName) (string
 	return "", nil
 }
 
+// 使用watch监测volumentAttachMent变为true
 func (c *csiAttacher) WaitForAttach(spec *volume.Spec, _ string, pod *v1.Pod, timeout time.Duration) (string, error) {
 	source, err := getPVSourceFromSpec(spec)
 	if err != nil {
@@ -264,6 +266,7 @@ func (c *csiAttacher) GetDeviceMountPath(spec *volume.Spec) (string, error) {
 	return deviceMountPath, nil
 }
 
+// csi调用NodeStageVolume接口执行volume到node的挂载，这是一个global挂载，然后pod执行各自单独的绑定挂载
 func (c *csiAttacher) MountDevice(spec *volume.Spec, devicePath string, deviceMountPath string) error {
 	klog.V(4).Infof(log("attacher.MountDevice(%s, %s)", devicePath, deviceMountPath))
 

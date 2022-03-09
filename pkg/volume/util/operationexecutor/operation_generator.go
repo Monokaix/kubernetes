@@ -318,6 +318,7 @@ func (og *operationGenerator) GenerateBulkVolumeVerifyFunc(
 
 }
 
+// 生成attach操作的函数，调用方是operationExecutor的AttachVolume
 func (og *operationGenerator) GenerateAttachVolumeFunc(
 	volumeToAttach VolumeToAttach,
 	actualStateOfWorld ActualStateOfWorldAttacherUpdater) volumetypes.GeneratedOperations {
@@ -498,6 +499,9 @@ func (og *operationGenerator) GenerateDetachVolumeFunc(
 	}, nil
 }
 
+// 对于csi场景，调用csi attacher的MountDevice进行global挂载，再调用csiMountMgr的SetUp
+// 进行真正的挂载，SetUp调用csi的NodePublishVolume进行挂载
+// 调用方：operationExecutor的MountVolume
 func (og *operationGenerator) GenerateMountVolumeFunc(
 	waitForAttachTimeout time.Duration,
 	volumeToMount VolumeToMount,
