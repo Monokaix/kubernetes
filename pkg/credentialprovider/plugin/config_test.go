@@ -18,13 +18,13 @@ package plugin
 
 import (
 	"io/ioutil"
-	"os"
 	"reflect"
 	"testing"
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kubeletconfig "k8s.io/kubernetes/pkg/kubelet/apis/config"
+	"k8s.io/kubernetes/test/utils"
 )
 
 func Test_readCredentialProviderConfigFile(t *testing.T) {
@@ -317,18 +317,18 @@ providers:
 
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			file, err := ioutil.TempFile("", "config.yaml")
+			f, err := ioutil.TempFile("", "config.yaml")
 			if err != nil {
 				t.Fatal(err)
 			}
-			defer os.Remove(file.Name())
+			defer utils.RemoveTestFile(t, f)
 
-			_, err = file.WriteString(testcase.configData)
+			_, err = f.WriteString(testcase.configData)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			authConfig, err := readCredentialProviderConfigFile(file.Name())
+			authConfig, err := readCredentialProviderConfigFile(f.Name())
 			if err != nil && !testcase.expectErr {
 				t.Fatal(err)
 			}
